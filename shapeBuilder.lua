@@ -21,7 +21,7 @@ end
 
 function checkResources()
   writeOut("Checking there are resources to build with....")
-  for i=1,16 do
+  for i=currentSelection,16 do
     if i == 16 then
       writeOut("Robot has no resources left to build with, please put new resources in to continue building.")
       io.read()
@@ -107,15 +107,36 @@ function safeForward()
   while not success do
     success = robot.forward()
     if not success then
-      while robot.detect() do
+      if robot.detect() then
         if not robot.swing() then
-          print("Blocked attempting to move forward.")
-          print("Please clear and press enter to continue.")
+          writeOut("Blocked attempting to move forward.")
+          writeOut("Please clear and press enter to continue.")
           io.read()
         end
+      else
+        placeBlock()
+        safeForward()
+        placeBlock()
+        safeBack()
+        robot.swingDown()
+        safeForward()
+        robot.swingDown()
       end
     end
   end
+  -- success = false
+  -- while not success do
+  --   success = robot.forward()
+  --   if not success then
+  --     while robot.detect() do
+  --       if not robot.swing() then
+  --         print("Blocked attempting to move forward.")
+  --         print("Please clear and press enter to continue.")
+  --         io.read()
+  --       end
+  --     end
+  --   end
+  -- end
 end
 
 
@@ -127,17 +148,22 @@ function safeBack()
     success = robot.back()
     if not success then
       turnAroundTrack();
-      while robot.detect() do
+      if robot.detect() then
         if not robot.swing() then
-          break;
+          turnAroundTrack()
+          writeOut("Blocked attempting to move back.")
+          writeOut("Please clear and press enter to continue.")
+          io.read()
         end
-      end
-      turnAroundTrack()
-      success = robot.back()
-      if not success then
-        print("Blocked attempting to move back.")
-        print("Please clear and press enter to continue.")
-        io.read()
+      else
+        placeBlock()
+        safeForward()
+        placeBlock()
+        safeBack()
+        robot.swingDown()
+        safeForward()
+        robot.swingDown()
+        turnAroundTrack()
       end
     end
   end
