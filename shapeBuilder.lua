@@ -1,3 +1,8 @@
+-- Based on http://pastebin.com/zkb4FY4L by Aeolun
+-- Based on https://github.com/Keridos/Shape-Builder by Keridos
+-- Edited to work with Open Computers by InfinitySamurai
+
+
 local component = require("component")
 gen = component.generator
 robot = require("robot")
